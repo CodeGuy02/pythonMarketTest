@@ -1,5 +1,74 @@
 #ui TEST -
 
+import matplotlib
+matplotlib.use('Qt4Agg')
+
+import sys
+import requests
+import time
+import os
+import xml.etree.ElementTree as ET
+import sys
+import shelve
+import struct
+import datetime
+import random
+import math
+import platform
+
+from colorama import init
+from colorama import Fore, Back, Style
+from subprocess import call
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.ticker as mticker
+from matplotlib.patches import Rectangle
+from matplotlib.finance import candlestick_ohlc
+
+import numpy as np
+import timeit
+
+from os import getpid
+from multiprocessing import Process, Manager
+from PyQt4 import QtGui, QtCore, uic
+from PyQt4 import uic
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+from poloniex import poloniex
+
+qtCreatorFile = "/home/user_name/Software/MarketBots.ui"
+Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+
+
+
+
+
+
+class MyApp(QtGui.QMainWindow, Ui_MainWindow):
+    bot_slots_available = [True, True, True, True, True, True, True]
+    num_bot_slots_available = 7
+    bots = []
+
+    market_slots_available = [True, True, True, True, True, True, True]
+    num_market_slots_available = 7
+    markets = []
+
+    strategyTableFirstClick = [False, False, False, False, False, False, False]
+
+    lastStrategyAvailableCellClicked = 0
+    lastMarketSelected = 0
+
+    # Connected States:
+    connectedToPoloniex = False
+    connectedToTDAmeritrade = False
+    connectedToBinance = False
+
+
+
+
+
 def handleButtonLogin(self):
     self.ActivityText.append('Logging In...')
 
