@@ -36,7 +36,7 @@ from PyQt4 import uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from poloniex import poloniex
+from market1 import market1
 
 qtCreatorFile = "/home/user_name/Software/MarketBots.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -61,11 +61,78 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     lastMarketSelected = 0
 
     # Connected States:
-    connectedToPoloniex = False
-    connectedToTDAmeritrade = False
-    connectedToBinance = False
+    connectedTomarket1 = False
+    connectedTomarket2 = False
+    connectedTomarket3 = False
 
+def __init__(self):
+        QtGui.QMainWindow.__init__(self)
+        Ui_MainWindow.__init__(self)
+        self.setupUi(self)
 
+        # Thread Test:
+        #self.threadclass = ThreadClass()
+        #self.threadclass.start()
+        #self.connect(self.threadclass, QtCore.SIGNAL('WORK_01'), self.updateUIwork)
+
+        # New Strategy Thread:
+        self.StrategyThread = StrategyThread()
+        self.StrategyThread.start()
+        self.connect(self.StrategyThread, QtCore.SIGNAL('STRATEGY_TEST_COMPLETION'), self.updateUItestCompletion)
+        self.connect(self.StrategyThread, QtCore.SIGNAL('CHART_VALUES_COMPLETION'), self.updateUIchartValuesCompletion)
+        self.connect(self.StrategyThread, QtCore.SIGNAL('BOUGHT'), self.updateUIstockBought)
+        self.connect(self.StrategyThread, QtCore.SIGNAL('SOLD'), self.updateUIstockSold)
+        self.connect(self.StrategyThread, QtCore.SIGNAL('RESULTS'), self.updateUIresults)
+
+        # Setup Menus:
+        self.bar = self.menuBar()
+        self.MarketsAvailableMenu = self.bar.addMenu("Markets Available")
+        self.SetupMarketsMenu = self.bar.addMenu("Setup Markets")
+
+        # Define our QAction items:
+        self.connectmarket1 = self.MarketsAvailableMenu.addAction("Connect to Market 1")
+        self.connectmarket2 = self.MarketsAvailableMenu.addAction("Connect to Market 2")
+        self.connectmarket3 = self.MarketsAvailableMenu.addAction("Connect to Market 3")
+        self.setupmarket1 = self.SetupMarketsMenu.addAction("Setup Market 1")
+        self.setupmarket2 = self.SetupMarketsMenu.addAction("Setup Market 2")
+        self.setupmarket3 = self.SetupMarketsMenu.addAction("Setup Market 3")
+
+        self.connectmarket1.triggered.connect(self.connectToMarket1)
+        self.connectmarket2.triggered.connect(self.connectToMarket2)
+        self.connectmarket3.triggered.connect(self.connectToMarket3)
+
+        # Setup Menus and Buttons:
+        self.setupButtons()
+
+        self.setupNewBotTable()
+        self.NameComboBox.currentIndexChanged.connect(self.updateUInameComboBox)
+        self.MarketComboBox.currentIndexChanged.connect(self.updateUImarketComboBox)
+        self.FundsAsgnComboBox.currentIndexChanged.connect(self.updateUIfundsAsgnComboBox)
+        self.LossThresholdComboBox.currentIndexChanged.connect(self.updateUIlossThresholdComboBox)
+        self.StrategyComboBox.currentIndexChanged.connect(self.updateUIstrategyComboBox)
+
+        self.TestStrategyComboBox.currentIndexChanged.connect(self.updateUItestStrategyComboBox)
+        self.MarketBackTestComboBox.currentIndexChanged.connect(self.updateUImarketBackTestComboBox)
+        self.CandlestickComboBox.currentIndexChanged.connect(self.updateUIcandlestickComboBox)
+        self.DaysComboBox.currentIndexChanged.connect(self.updateUIdaysComboBox)
+        #self.threadCreateNewBot = ThreadCreateNewBot()
+        #self.threadCreateNewBot.setValuesFromUI(self.num_bot_slots_available,self.bot_slots_available,)
+        #self.connect(self.threadCreateNewBot, QtCore.SIGNAL('CREATING_NEW_BOT'), self.updateUIcreate_new_bot)
+
+        #self.bot1.getCurrentRecordDataFromFile()
+        #self.bot2.getCurrentRecordDataFromFile()
+        #self.bot3.getCurrentRecordDataFromFile()
+
+        #self.loadBotData(self.bot1)
+        #self.loadBotData(self.bot2)
+        #self.loadBotData(self.bot3)
+        self.BotsAvailableTable.cellClicked.connect(self.cell_was_clicked)
+        self.StrategyAvailableTable.cellClicked.connect(self.strategy_available_cell_clicked)
+        self.BackTestingTable.cellClicked.connect(self.strategy_available_cell_clicked)
+        self.MarketTable.cellClicked.connect(self.marketCellClicked)
+        self.MarketTableDefaultValues(' ')
+
+        self.displaySystemStatus()
 
 
 
