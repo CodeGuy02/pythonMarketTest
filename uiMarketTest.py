@@ -293,3 +293,38 @@ def generateGraphs(self):
                 # xmin = 0
                 # xmax = bar_count
                 # append_day = time, stock_open, stock_high, stock_low, stock_close, stock_volume
+                highest_price = 0
+                # lowest_price = chartData[current_bar]['low']
+                # print(graphs_ohlc_data)
+                lowest_price = graphs_ohlc_data[new_market][0][3]  # 'low' value
+                # print('starting lowest price = ' + str(lowest_price))
+
+                current_bar = 0
+                for bar in graphs_ohlc_data[new_market]:
+                    # highest and lowest values:
+                    high = graphs_ohlc_data[new_market][current_bar][2]
+                    low = graphs_ohlc_data[new_market][current_bar][3]
+                    if highest_price < high:
+                        highest_price = high
+                    if lowest_price > low:
+                        lowest_price = low
+                    current_bar = current_bar + 1
+
+                ymin = lowest_price
+                ymax = highest_price
+
+                # debug:
+                #print('xmin = ' + str(xmin))
+                #print('xmax = ' + str(xmax))
+                #print('ymin = ' + str(ymin))
+                #print('ymax = ' + str(ymax))
+
+                plt.axis([xmin, xmax, ymin, ymax])
+                pltOHLC.xaxis.label.set_color('#c17dcd')
+                pltOHLC.yaxis.label.set_color('#c17dcd')
+                #pltOHLC.tick_params
+                pltOHLC.tick_params(axis='x', colors='#c17dcd')
+                pltOHLC.tick_params(axis='y', colors='#c17dcd')
+                pltOHLC.xaxis.label.set_color('#c17dcd')
+                pltOHLC.spines['bottom'].set_color('#c17dcd')
+                pltOHLC.title.set_color('#f1adfd')
