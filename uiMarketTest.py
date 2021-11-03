@@ -65,6 +65,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     connectedTomarket2 = False
     connectedTomarket3 = False
 
+
+
 def __init__(self):
         QtGui.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -182,7 +184,7 @@ def launch_script(self):
         self.priceHistory()
 
 def displaySystemStatus(self):
-        self.AccountDetailsText.append('                                    Test Version 0.1                          ')
+        self.AccountDetailsText.append('                                    Market Test Version 0.1                          ')
         self.AccountDetailsText.append('_____________________________________________________________________________________________')
         self.AccountDetailsText.append('Machine:    ' + str(platform.machine()))
         self.AccountDetailsText.append('System:     ' + str(platform.platform()))
@@ -328,3 +330,24 @@ def generateGraphs(self):
                 pltOHLC.xaxis.label.set_color('#c17dcd')
                 pltOHLC.spines['bottom'].set_color('#c17dcd')
                 pltOHLC.title.set_color('#f1adfd')
+
+                pltOHLC.patch.set_facecolor('#000000')
+                pltOHLC.grid(color='white')
+                pltOHLC.plot()
+
+                # plt.xticks(ohlc[0][0], ohlc[(bar_count - 1)][0])
+                plt.legend()
+
+                plot_data.update({new_market:fig})
+                self.percent_complete = self.percent_complete + 1
+                self.emit(QtCore.SIGNAL('STRATEGY_TEST_COMPLETION'), self.percent_complete)
+                #plt.show()
+                self.TDAmeritrade_plots = plot_data
+                #self.emit(QtCore.SIGNAL('GRAPH_COMPLETION'), key)
+        elif self.marketName == 'Market2':
+            self.emit(QtCore.SIGNAL('GRAPH_COMPLETION'), key)
+        elif self.marketName == 'Market3':
+            self.emit(QtCore.SIGNAL('GRAPH_COMPLETION'), key)
+
+        self.percent_complete = self.percent_complete + 10
+        self.emit(QtCore.SIGNAL('STRATEGY_TEST_COMPLETION'), self.percent_complete)
