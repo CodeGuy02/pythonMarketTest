@@ -351,3 +351,81 @@ def generateGraphs(self):
 
         self.percent_complete = self.percent_complete + 10
         self.emit(QtCore.SIGNAL('STRATEGY_TEST_COMPLETION'), self.percent_complete)
+
+def showGraphs(self):
+        if self.marketName == 'Market I':
+            for currencyPair, chartData in self.TDAmeritrade_plots.iteritems():
+                chartData.show()
+            unix_time = time.time()
+            mtime = str(datetime.datetime.fromtimestamp(unix_time))
+            key = 'Displaying charts' + str(mtime)
+            self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
+
+def generateSMA(self, time_frame):
+        self.smaValues.append(time_frame)
+        print('    ------ Generating SMA plots--------------')
+        if self.marketName == 'Market I':
+            plot_data = self.TDAmeritrade_plots
+            ohlc_data = self.TDAmeritrade_data
+        elif self.marketName == 'Market II':
+            plot_data = self.MarketII_data
+            ohlc_data = self.MarketII_plots
+        elif self.marketName == 'Binance':
+            plot_data = self.MarketIII_data
+            ohlc_data = self.MarketIII_plots
+
+        for currencyPair, plotFigure in plot_data.iteritems(): # plot_data.iteritems()
+            new_market = str(currencyPair)
+            currentOHLC = ohlc_data[new_market]
+
+            bar_count = len(ohlc_data[new_market])
+            # print('bar count for graph test = ' + str(bar_count))
+
+            xmin = ohlc_data[new_market][0][0]
+            xmax = ohlc_data[new_market][(bar_count - 1)][0]
+
+            # Get x_time and smaData from ohlc_data:
+            x_time = []
+            smaData = []
+
+            sma_start_day = time_frame - 1
+            sum_sma = 0
+            final_sma = 0
+            current_day = 0
+            previous_close = 0
+            days_to_remove = []
+
+            for bar in currentOHLC:
+                #x_time.append(bar[0])
+                sum_sma = sum_sma + bar[4]      # sum for days close/bar close
+                days_to_remove.append(bar[4])
+                if current_day > sma_start_day:
+                    sum_sma = sum_sma - days_to_remove[(current_day - time_frame)]
+                if current_day >= sma_start_day:
+                    x_time.append(bar[0])
+                    final_sma = sum_sma / (sma_start_day + 1)
+                    smaData.append(final_sma)
+                    previous_close = bar[4]
+
+                current_day = current_day + 1
+            fig = plotFigure
+            pltSMA = fig.add_subplot(311)
+            pltSMA.grid(True)
+            #pltSMA.annotate(str(time_frame))
+            line_label = 'SMA (' + str(time_frame) + ')'
+            pltSMA.plot(x_time, smaData, label=line_label)
+            print('SMAgeneration bar count = ' + str(bar_count))
+            halfwaypoint = bar_count / 2
+            pltSMA.text(x_time[halfwaypoint], smaData[halfwaypoint],line_label, color='#ccaacc')
+
+            #plt.show()
+            self.percent_complete = self.percent_complete + 1
+            self.emit(QtCore.SIGNAL('STRATEGY_TEST_COMPLETION'), self.percent_complete)
+        unix_time = time.time()
+        mtime = str(datetime.datetime.fromtimestamp(unix_time))
+        key = ' generating sma chart data...' + str(mtime)
+        self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
+
+
+def resetCompletionPercentBar(self):
+        self.percent_complete = 0
