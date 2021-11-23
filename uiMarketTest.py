@@ -429,3 +429,40 @@ def generateSMA(self, time_frame):
 
 def resetCompletionPercentBar(self):
         self.percent_complete = 0
+
+def prepareStarterValues(self):
+        print('    ------ Prepare Starter Values --------------')
+        # For each symbol:
+        # Create Dictionary for each symbol and attach above lists.
+        if (self.marketName == 'ourMarket'):
+            graphs_ohlc_data = self.TDAmeritrade_data
+            symbolDictionary = {}
+            for currencyPair, chartData in graphs_ohlc_data.iteritems():
+                dataDictionary = {}
+                priceList = []
+                timeList = []
+                volumeList = []
+                resistanceList = []
+                supportList = []
+                #print('currencyPair for StarterValues = ' + str(currencyPair))
+                new_market = str(currencyPair)
+                new_ohlc = graphs_ohlc_data[new_market]
+
+                bar_count = len(graphs_ohlc_data[new_market])
+                #print('bar count for StarterValues = ' + str(bar_count))
+
+                highest_price = 0
+                lowest_price = graphs_ohlc_data[new_market][0][3]  # 'low' value
+
+                current_bar = 0
+                # highest and lowest values:
+                highest_price = 0
+                lowest_price = 10000 # highest possible value
+                for bar in graphs_ohlc_data[new_market]:
+                    high = graphs_ohlc_data[new_market][current_bar][2]
+                    low = graphs_ohlc_data[new_market][current_bar][3]
+                    if highest_price < high:
+                        highest_price = high
+                    if lowest_price > low:
+                        lowest_price = low
+                    current_bar = current_bar + 1
