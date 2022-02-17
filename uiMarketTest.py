@@ -466,3 +466,20 @@ def prepareStarterValues(self):
                     if lowest_price > low:
                         lowest_price = low
                     current_bar = current_bar + 1
+
+
+def runCurrentStrategy(self):
+        # create step object
+        return
+def runCurrentStrategyBackTest(self):
+        #
+        return
+
+def historicTest(self):
+        print('    ------ Historical Testing --------------')
+        key = '    ------ Historical Testing --------------'
+        self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
+        key = 'Buy Strategy #  ' + str(self.BuyStrategy)
+        self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
+        key = 'Sell Strategy # ' + str(self.SellStrategy)
+        self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
