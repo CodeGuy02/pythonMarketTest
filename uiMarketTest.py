@@ -483,3 +483,43 @@ def historicTest(self):
         self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
         key = 'Sell Strategy # ' + str(self.SellStrategy)
         self.emit(QtCore.SIGNAL('CHART_VALUES_COMPLETION'), key)
+
+        self.mode = 'buy'
+        self.bought = False
+        self.sold = False
+        soldAt = 0
+        boughtAt = 0
+        totalBuys = 0
+        totalSells = 0
+        plotFigure = ''
+
+        wins = 0.0
+        losses = 0.0
+        accuracy = 0.0
+        gains = 0.0
+        totalSpent = 0.0
+
+        totalStocksTested = 0
+        print('buy strategy = ' + str(self.BuyStrategy))
+        print('sell strategy = ' + str(self.SellStrategy))
+        for symbolName, dictionary in self.symbolDictionary.iteritems():
+            currentBar = 0
+            #print('key type = ' + str(type(symbolName)))
+            #print(' key = ' + str(symbolName))
+            #print('value type = ' + str(type(dictionary)))
+            #for key2, value2 in dictionary.iteritems():
+            #   print(' key2 = ' + str(key2))
+            #print(str(ohlc_data[symbolName][0]))
+            buysRectangle = []
+            sellsRectangle = []
+            shares1000Rectangle = 0.0
+            profitRectangle = 0.0
+
+
+            x_time = []
+            buyData = []
+            sellData = []
+            plotFigure = plot_data[symbolName]
+            self.mode = 'buy'
+
+            while currentBar < len(dictionary['time']):
