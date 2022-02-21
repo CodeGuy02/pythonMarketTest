@@ -523,3 +523,26 @@ def historicTest(self):
             self.mode = 'buy'
 
             while currentBar < len(dictionary['time']):
+
+                #print(' current_bar = ' + str(currentBar))
+                #print(' type = ' + str(type(dictionary['time'][currentBar])))
+                #print('   adding : ' + str(dictionary['time'][currentBar]))
+                #print('ohlc_data : ' + str(ohlc_data[symbolName][currentBar][0]))
+                #print(' ')
+
+                #x_time.append(dictionary['time'][currentBar])
+                x_time.append(ohlc_data[symbolName][currentBar][0])
+                unix_time = time.time()
+                mtime = str(datetime.datetime.fromtimestamp(unix_time))
+                if self.mode == 'buy':
+                    sellData.append(0)
+                    # if buy triggered, change mode to sell
+                    if self.BuyStrategy == 1:
+                        buyOpportunity = self.buyStrategy1(symbolName,currentBar)
+                        if buyOpportunity == True:
+                            currentPrice = str(self.symbolDictionary[symbolName]['close'][currentBar])
+                            self.bought = True
+                            self.mode = 'sell'
+                            boughtAt = self.symbolDictionary[symbolName]['close'][currentBar]
+                            print(symbolName)
+                            print('bought(1)>>> ' + str(boughtAt))
