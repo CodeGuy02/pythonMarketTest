@@ -546,3 +546,17 @@ def historicTest(self):
                             boughtAt = self.symbolDictionary[symbolName]['close'][currentBar]
                             print(symbolName)
                             print('bought(1)>>> ' + str(boughtAt))
+                            totalBuys = totalBuys + 1
+                            message = str(' Bought ' + symbolName + ' at ' + currentPrice + '  - time:'  + mtime)
+                            self.emit(QtCore.SIGNAL('BOUGHT'), message)
+                            buyData.append(boughtAt)
+                            buysRectangle.append(boughtAt)
+                        else:
+                            buyData.append(0)
+                    elif self.BuyStrategy == 2:
+                        buyOpportunity = self.buyStrategy2(symbolName, currentBar)
+                        if buyOpportunity == True:
+                            currentPrice = str(self.symbolDictionary[symbolName]['close'][currentBar])
+                            self.bought = True
+                            self.mode = 'sell'
+                            boughtAt = self.symbolDictionary[symbolName]['close'][currentBar]
